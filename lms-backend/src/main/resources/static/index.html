@@ -1,73 +1,84 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login LMS Kampus</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | LMS Kampus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="login-page">
+  <main class="login-shell">
+    <section class="login-intro">
+      <div class="brand brand-light">
+        <span class="brand-mark"><i data-lucide="graduation-cap"></i></span>
+        <span>LMS<span class="brand-muted"> Kampus</span></span>
+      </div>
+      <div class="intro-copy">
+        <span class="eyebrow">LEARNING MANAGEMENT SYSTEM</span>
+        <h1>Belajar lebih terarah,<br><em>berkembang tanpa batas.</em></h1>
+        <p>Platform pembelajaran digital untuk menghubungkan mahasiswa, dosen, dan pengelola akademik dalam satu ruang.</p>
+      </div>
+      <div class="intro-footer">
+        <span class="intro-dot"></span>
+        Satu platform untuk seluruh aktivitas akademik
+      </div>
+    </section>
 
-    <div class="login-container">
-        <div class="login-illustration">
-            <div class="illustration-content">
-                <div class="cap-icon">🎓</div>
-                <h1>Selamat Datang!</h1>
-                <p>Learning Management System Kampus</p>
-                <div class="book-icon">📚</div>
-            </div>
+    <section class="login-panel">
+      <div class="login-card">
+        <div class="login-mobile-brand brand">
+          <span class="brand-mark"><i data-lucide="graduation-cap"></i></span>
+          <span>LMS<span class="brand-muted"> Kampus</span></span>
         </div>
 
-        <div class="login-form">
-            <div class="logo">🎓 <span>LMS Kampus</span></div>
+        <span class="eyebrow blue">SELAMAT DATANG KEMBALI</span>
+        <h2>Masuk ke akun Anda</h2>
+        <p class="muted">Silakan masukkan informasi akun untuk melanjutkan.</p>
 
-            <h2>Login Akun</h2>
-            <p class="subtitle">Silakan masuk untuk melanjutkan</p>
+        <form id="loginForm">
+          <label for="username">Nama pengguna</label>
+          <div class="field">
+            <i data-lucide="user"></i>
+            <input id="username" name="username" placeholder="Masukkan nama pengguna" required>
+          </div>
 
-            <form id="loginForm">
-                <label>Username / Email</label>
-                <input type="text" id="username"
-                       placeholder="Masukkan username" required>
+          <label for="role">Masuk sebagai</label>
+          <div class="field">
+            <i data-lucide="users"></i>
+            <select id="role" name="role">
+              <option value="Mahasiswa">Mahasiswa</option>
+              <option value="Dosen">Dosen</option>
+              <option value="Admin">Admin</option>
+            </select>
+            <i data-lucide="chevron-down" class="select-arrow"></i>
+          </div>
 
-                <label>Password</label>
-                <input type="password" id="password"
-                       placeholder="Masukkan password" required>
+          <label for="password">Kata sandi</label>
+          <div class="field">
+            <i data-lucide="lock"></i>
+            <input id="password" type="password" placeholder="Masukkan kata sandi" required>
+            <button class="password-toggle" type="button" id="togglePassword" aria-label="Tampilkan kata sandi">
+              <i data-lucide="eye"></i>
+            </button>
+          </div>
 
-                <label>Login Sebagai</label>
-                <select id="role" required>
-                    <option value="">Pilih pengguna</option>
-                    <option value="Dosen">Dosen</option>
-                    <option value="Mahasiswa">Mahasiswa</option>
-                    <option value="Admin">Admin</option>
-                </select>
+          <button class="btn btn-primary login-submit" type="submit">
+            Masuk ke Dashboard <i data-lucide="arrow-right"></i>
+          </button>
+          <p id="loginError" class="form-error"></p>
+        </form>
 
-                <button type="submit" class="login-button">
-                    Login
-                </button>
-            </form>
-
-            <p id="message"></p>
-            <p class="copyright">© 2026 LMS Kampus</p>
+        <div class="demo-note">
+          <i data-lucide="info"></i>
+          <span>Prototype UI: isi nama pengguna dan kata sandi bebas untuk mencoba. Pilih role sesuai tampilan yang ingin dilihat.</span>
         </div>
-    </div>
-
-    <script>
-        document.getElementById("loginForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            const role = document.getElementById("role").value;
-
-            if (username && password && role) {
-                localStorage.setItem("username", username);
-                localStorage.setItem("role", role);
-
-                window.location.href = "dashboard.html";
-            }
-        });
-    </script>
-
+        <p class="login-copy">© 2026 LMS Kampus. Learning made connected.</p>
+      </div>
+    </section>
+  </main>
+  <script src="js/script.js"></script>
 </body>
 </html>
