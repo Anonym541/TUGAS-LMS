@@ -1,460 +1,84 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | LMS Kampus</title>
-
-    <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | LMS Kampus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-intro">
+      <div class="brand brand-light">
+        <span class="brand-mark"><i data-lucide="graduation-cap"></i></span>
+        <span>LMS<span class="brand-muted"> Kampus</span></span>
+      </div>
+      <div class="intro-copy">
+        <span class="eyebrow">LEARNING MANAGEMENT SYSTEM</span>
+        <h1>Belajar lebih terarah,<br><em>berkembang tanpa batas.</em></h1>
+        <p>Platform pembelajaran digital untuk menghubungkan mahasiswa, dosen, dan pengelola akademik dalam satu ruang.</p>
+      </div>
+      <div class="intro-footer">
+        <span class="intro-dot"></span>
+        Satu platform untuk seluruh aktivitas akademik
+      </div>
+    </section>
 
-<body class="dashboard-page">
-
-<div class="app-layout">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="brand">
-            <div class="brand-icon"><i data-lucide="graduation-cap"></i></div>
-            <div>
-                <h2>LMS<span>.</span></h2>
-                <small>Learning Management</small>
-            </div>
+    <section class="login-panel">
+      <div class="login-card">
+        <div class="login-mobile-brand brand">
+          <span class="brand-mark"><i data-lucide="graduation-cap"></i></span>
+          <span>LMS<span class="brand-muted"> Kampus</span></span>
         </div>
 
-        <div class="sidebar-label">MENU UTAMA</div>
+        <span class="eyebrow blue">SELAMAT DATANG KEMBALI</span>
+        <h2>Masuk ke akun Anda</h2>
+        <p class="muted">Silakan masukkan informasi akun untuk melanjutkan.</p>
 
-        <nav class="menu">
-            <a href="index.html" class="active">
-                <i data-lucide="layout-dashboard"></i>
-                <span>Dashboard</span>
-            </a>
+        <form id="loginForm">
+          <label for="username">Nama pengguna</label>
+          <div class="field">
+            <i data-lucide="user"></i>
+            <input id="username" name="username" placeholder="Masukkan nama pengguna" required>
+          </div>
 
-            <a href="mahasiswa.html">
-                <i data-lucide="users"></i>
-                <span>Data Mahasiswa</span>
-            </a>
+          <label for="role">Masuk sebagai</label>
+          <div class="field">
+            <i data-lucide="users"></i>
+            <select id="role" name="role">
+              <option value="Mahasiswa">Mahasiswa</option>
+              <option value="Dosen">Dosen</option>
+              <option value="Admin">Admin</option>
+            </select>
+            <i data-lucide="chevron-down" class="select-arrow"></i>
+          </div>
 
-            <a href="perkuliahan.html">
-                <i data-lucide="book-open"></i>
-                <span>Perkuliahan</span>
-            </a>
-
-            <a href="tugas.html">
-                <i data-lucide="clipboard-list"></i>
-                <span>Tugas</span>
-            </a>
-
-            <a href="presensi.html">
-                <i data-lucide="calendar-check"></i>
-                <span>Presensi</span>
-            </a>
-
-            <a href="nilai.html">
-                <i data-lucide="chart-no-axes-column-increasing"></i>
-                <span>Nilai Akademik</span>
-            </a>
-
-            <a href="jadwal.html">
-                <i data-lucide="calendar-days"></i>
-                <span>Jadwal Kuliah</span>
-            </a>
-
-            <a href="pengumuman.html">
-                <i data-lucide="megaphone"></i>
-                <span>Pengumuman</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-label management-label">PENGELOLAAN</div>
-
-        <nav class="menu">
-            <a href="pesan.html">
-                <i data-lucide="message-square"></i>
-                <span>Pesan</span>
-            </a>
-
-            <a href="pengaturan.html">
-                <i data-lucide="settings"></i>
-                <span>Pengaturan</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-            <div class="help-card">
-                <div class="help-icon"><i data-lucide="headset"></i></div>
-                <strong>Butuh Bantuan?</strong>
-                <p>Hubungi layanan bantuan LMS.</p>
-                <a href="#">Pusat Bantuan <i data-lucide="arrow-up-right"></i></a>
-            </div>
-
-            <button class="sidebar-logout" onclick="logout()">
-                <i data-lucide="log-out"></i>
-                Keluar dari Sistem
+          <label for="password">Kata sandi</label>
+          <div class="field">
+            <i data-lucide="lock"></i>
+            <input id="password" type="password" placeholder="Masukkan kata sandi" required>
+            <button class="password-toggle" type="button" id="togglePassword" aria-label="Tampilkan kata sandi">
+              <i data-lucide="eye"></i>
             </button>
+          </div>
+
+          <button class="btn btn-primary login-submit" type="submit">
+            Masuk ke Dashboard <i data-lucide="arrow-right"></i>
+          </button>
+          <p id="loginError" class="form-error"></p>
+        </form>
+
+        <div class="demo-note">
+          <i data-lucide="info"></i>
+          <span>Prototype UI: isi nama pengguna dan kata sandi bebas untuk mencoba. Pilih role sesuai tampilan yang ingin dilihat.</span>
         </div>
-    </aside>
-
-
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-
-        <!-- TOPBAR -->
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="mobile-menu" id="menuToggle">
-                    <i data-lucide="menu"></i>
-                </button>
-                <div>
-                    <div class="breadcrumb">Halaman / <strong>Dashboard</strong></div>
-                    <h2>Dashboard</h2>
-                </div>
-            </div>
-
-            <div class="topbar-right">
-                <div class="search-box">
-                    <i data-lucide="search"></i>
-                    <input type="text" placeholder="Cari sesuatu...">
-                    <span>⌘ K</span>
-                </div>
-
-                <button class="icon-button notification-button">
-                    <i data-lucide="bell"></i>
-                    <span class="notification-dot"></span>
-                </button>
-
-                <div class="profile">
-                    <div class="profile-avatar" id="profileInitial">G</div>
-                    <div class="profile-text">
-                        <strong id="userName">Pengguna</strong>
-                        <small id="userRole">Mahasiswa</small>
-                    </div>
-                    <i data-lucide="chevron-down"></i>
-                </div>
-            </div>
-        </header>
-
-
-        <!-- WELCOME BANNER -->
-        <section class="welcome-banner">
-            <div class="welcome-content">
-                <span class="welcome-label">LEARNING MANAGEMENT SYSTEM</span>
-                <h1 id="welcomeText">Selamat datang kembali!</h1>
-                <p>
-                    Kelola aktivitas akademik dan kegiatan perkuliahan
-                    dengan lebih mudah melalui satu platform.
-                </p>
-
-                <div class="welcome-date">
-                    <i data-lucide="calendar-days"></i>
-                    <span id="currentDate"></span>
-                </div>
-            </div>
-
-            <div class="welcome-art">
-                <div class="art-circle circle-one"></div>
-                <div class="art-circle circle-two"></div>
-                <div class="art-icon">
-                    <i data-lucide="graduation-cap"></i>
-                </div>
-                <div class="floating-card floating-one">
-                    <i data-lucide="book-open"></i>
-                    <span>Belajar lebih mudah</span>
-                </div>
-                <div class="floating-card floating-two">
-                    <i data-lucide="award"></i>
-                    <span>Prestasi akademik</span>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- STATISTICS -->
-        <section class="section-heading">
-            <div>
-                <h3>Ringkasan Akademik</h3>
-                <p>Informasi singkat aktivitas dalam sistem LMS.</p>
-            </div>
-            <button class="outline-button">
-                <i data-lucide="download"></i> Unduh Laporan
-            </button>
-        </section>
-
-        <section class="stats-grid">
-
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div class="stat-icon icon-blue">
-                        <i data-lucide="users"></i>
-                    </div>
-                    <span class="stat-tag positive">+8,2%</span>
-                </div>
-                <p>Total Mahasiswa</p>
-                <h2>120</h2>
-                <small>Mahasiswa terdaftar</small>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div class="stat-icon icon-purple">
-                        <i data-lucide="book-open"></i>
-                    </div>
-                    <span class="stat-tag neutral">Aktif</span>
-                </div>
-                <p>Mata Kuliah</p>
-                <h2>10</h2>
-                <small>Mata kuliah tersedia</small>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div class="stat-icon icon-orange">
-                        <i data-lucide="file-check"></i>
-                    </div>
-                    <span class="stat-tag warning">Perlu dicek</span>
-                </div>
-                <p>Tugas Aktif</p>
-                <h2>05</h2>
-                <small>Tugas dalam periode aktif</small>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div class="stat-icon icon-green">
-                        <i data-lucide="clipboard-check"></i>
-                    </div>
-                    <span class="stat-tag positive">Berlangsung</span>
-                </div>
-                <p>Kuis Aktif</p>
-                <h2>03</h2>
-                <small>Kuis yang tersedia</small>
-            </div>
-
-        </section>
-
-
-        <!-- SCHEDULE -->
-        <section class="dashboard-grid" style="grid-template-columns: 1fr;">
-
-            <div class="panel schedule-panel">
-                <div class="panel-header">
-                    <div>
-                        <h3>Jadwal Perkuliahan</h3>
-                        <p>Agenda kegiatan terdekat.</p>
-                    </div>
-                    <button class="more-button">Lihat Semua</button>
-                </div>
-
-                <div class="schedule-item">
-                    <div class="schedule-time">
-                        <strong>08:00</strong>
-                        <small>09:40</small>
-                    </div>
-                    <div class="schedule-line blue-line"></div>
-                    <div class="schedule-info">
-                        <strong>Pemrograman Web</strong>
-                        <p>Ruang Lab Komputer</p>
-                        <span class="schedule-label blue-label">TRPL - A</span>
-                    </div>
-                </div>
-
-                <div class="schedule-item">
-                    <div class="schedule-time">
-                        <strong>10:00</strong>
-                        <small>11:40</small>
-                    </div>
-                    <div class="schedule-line purple-line"></div>
-                    <div class="schedule-info">
-                        <strong>Basis Data</strong>
-                        <p>Ruang Kelas 204</p>
-                        <span class="schedule-label purple-label">TRPL - A</span>
-                    </div>
-                </div>
-
-                <div class="schedule-item">
-                    <div class="schedule-time">
-                        <strong>13:00</strong>
-                        <small>14:40</small>
-                    </div>
-                    <div class="schedule-line green-line"></div>
-                    <div class="schedule-info">
-                        <strong>Analisis Sistem</strong>
-                        <p>Ruang Kelas 301</p>
-                        <span class="schedule-label green-label">TRPL - A</span>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-
-        <!-- BOTTOM CONTENT -->
-        <section class="bottom-grid">
-
-            <div class="panel recent-panel">
-                <div class="panel-header">
-                    <div>
-                        <h3>Aktivitas Terbaru</h3>
-                        <p>Informasi terbaru dari kegiatan akademik.</p>
-                    </div>
-                    <button class="more-button">Lihat Semua</button>
-                </div>
-
-                <div class="recent-item">
-                    <div class="recent-icon recent-blue">
-                        <i data-lucide="book-open"></i>
-                    </div>
-                    <div class="recent-text">
-                        <strong>Materi baru ditambahkan</strong>
-                        <p>Dosen mengunggah materi Pemrograman Web.</p>
-                    </div>
-                    <span class="recent-time">09:30</span>
-                </div>
-
-                <div class="recent-item">
-                    <div class="recent-icon recent-orange">
-                        <i data-lucide="file-text"></i>
-                    </div>
-                    <div class="recent-text">
-                        <strong>Tugas baru tersedia</strong>
-                        <p>Tugas Basis Data telah dibuka.</p>
-                    </div>
-                    <span class="recent-time">08:15</span>
-                </div>
-
-                <div class="recent-item">
-                    <div class="recent-icon recent-green">
-                        <i data-lucide="megaphone"></i>
-                    </div>
-                    <div class="recent-text">
-                        <strong>Pengumuman perkuliahan</strong>
-                        <p>Informasi jadwal perkuliahan terbaru.</p>
-                    </div>
-                    <span class="recent-time">Kemarin</span>
-                </div>
-            </div>
-
-
-            <div class="panel quick-panel">
-                <div class="panel-header">
-                    <div>
-                        <h3>Akses Cepat</h3>
-                        <p>Menu yang sering digunakan.</p>
-                    </div>
-                </div>
-
-                <div class="quick-grid">
-                    <a href="perkuliahan.html" class="quick-item">
-                        <div class="quick-icon quick-blue">
-                            <i data-lucide="book-open"></i>
-                        </div>
-                        <span>Perkuliahan</span>
-                    </a>
-
-                    <a href="tugas.html" class="quick-item">
-                        <div class="quick-icon quick-purple">
-                            <i data-lucide="file-text"></i>
-                        </div>
-                        <span>Tugas</span>
-                    </a>
-
-                    <a href="presensi.html" class="quick-item">
-                        <div class="quick-icon quick-orange">
-                            <i data-lucide="clipboard-check"></i>
-                        </div>
-                        <span>Presensi</span>
-                    </a>
-
-                    <a href="nilai.html" class="quick-item">
-                        <div class="quick-icon quick-green">
-                            <i data-lucide="chart-column"></i>
-                        </div>
-                        <span>Nilai</span>
-                    </a>
-                </div>
-            </div>
-
-        </section>
-
-
-        <footer class="footer">
-            © 2026 LMS Kampus. Learning Management System.
-            <span>Dirancang untuk mendukung pembelajaran digital.</span>
-        </footer>
-
-    </main>
-</div>
-
-
-<script>
-    // Data pengguna dari halaman login
-    const username = localStorage.getItem("username");
-    const role = localStorage.getItem("role");
-
-    if (!username || !role) {
-        window.location.href = "login.html";
-    }
-
-    document.getElementById("userName").textContent = username || "Pengguna";
-    document.getElementById("userRole").textContent = role || "Pengguna";
-    document.getElementById("welcomeText").textContent = "Halo, " + username + "!";
-    document.getElementById("profileInitial").textContent =
-        (username || "P").charAt(0).toUpperCase();
-
-    // Tanggal otomatis
-    document.getElementById("currentDate").textContent =
-        new Date().toLocaleDateString("id-ID", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        });
-
-    // Menu sesuai role
-    const menus = document.querySelectorAll(".menu a");
-
-    if (role === "Mahasiswa") {
-        menus.forEach(menu => {
-            if (
-                menu.textContent.includes("Data Mahasiswa") ||
-                menu.textContent.includes("Pengaturan")
-            ) {
-                menu.style.display = "none";
-            }
-        });
-    }
-
-    if (role === "Dosen") {
-        menus.forEach(menu => {
-            if (
-                menu.textContent.includes("Pengaturan") ||
-                menu.textContent.includes("Data Mahasiswa")
-            ) {
-                menu.style.display = "none";
-            }
-        });
-    }
-
-    // Admin dapat melihat seluruh menu
-
-    // Logout
-    function logout() {
-        localStorage.removeItem("username");
-        localStorage.removeItem("role");
-        window.location.href = "login.html";
-    }
-
-    // Menu mobile
-    document.getElementById("menuToggle").addEventListener("click", () => {
-        document.querySelector(".sidebar").classList.toggle("show-sidebar");
-    });
-
-    // Render icon
-    lucide.createIcons();
-</script>
-
+        <p class="login-copy">© 2026 LMS Kampus. Learning made connected.</p>
+      </div>
+    </section>
+  </main>
+  <script src="js/script.js"></script>
 </body>
 </html>
