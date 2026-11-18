@@ -388,21 +388,22 @@
     </main>
 </div>
 
-
 <script>
-    // Data pengguna dari halaman login
-    const username = localStorage.getItem("username");
-    const role = localStorage.getItem("role");
+    // Mode Preview / Bypass Login Sementara (Otomatis isi jika belum login)
+    const username = localStorage.getItem("username") || "Erwin Pebriansyah";
+    const role = localStorage.getItem("role") || "Admin";
 
+    /* Nonaktifkan redirect ke login.html sementara sampai halaman login siap
     if (!username || !role) {
         window.location.href = "login.html";
     }
+    */
 
-    document.getElementById("userName").textContent = username || "Pengguna";
-    document.getElementById("userRole").textContent = role || "Pengguna";
+    document.getElementById("userName").textContent = username;
+    document.getElementById("userRole").textContent = role;
     document.getElementById("welcomeText").textContent = "Halo, " + username + "!";
     document.getElementById("profileInitial").textContent =
-        (username || "P").charAt(0).toUpperCase();
+        username.charAt(0).toUpperCase();
 
     // Tanggal otomatis
     document.getElementById("currentDate").textContent =
@@ -416,22 +417,11 @@
     // Menu sesuai role
     const menus = document.querySelectorAll(".menu a");
 
-    if (role === "Mahasiswa") {
+    if (role === "Mahasiswa" || role === "Dosen") {
         menus.forEach(menu => {
             if (
                 menu.textContent.includes("Data Mahasiswa") ||
                 menu.textContent.includes("Pengaturan")
-            ) {
-                menu.style.display = "none";
-            }
-        });
-    }
-
-    if (role === "Dosen") {
-        menus.forEach(menu => {
-            if (
-                menu.textContent.includes("Pengaturan") ||
-                menu.textContent.includes("Data Mahasiswa")
             ) {
                 menu.style.display = "none";
             }
@@ -444,16 +434,22 @@
     function logout() {
         localStorage.removeItem("username");
         localStorage.removeItem("role");
-        window.location.href = "login.html";
+        alert("Berhasil logout (Halaman login.html belum dibuat).");
+        // window.location.href = "login.html";
     }
 
     // Menu mobile
-    document.getElementById("menuToggle").addEventListener("click", () => {
-        document.querySelector(".sidebar").classList.toggle("show-sidebar");
-    });
+    const menuToggle = document.getElementById("menuToggle");
+    if (menuToggle) {
+        menuToggle.addEventListener("click", () => {
+            document.querySelector(".sidebar").classList.toggle("show-sidebar");
+        });
+    }
 
     // Render icon
-    lucide.createIcons();
+    if (typeof lucide !== "undefined") {
+        lucide.createIcons();
+    }
 </script>
 
 </body>
