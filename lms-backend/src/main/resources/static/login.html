@@ -1,3 +1,144 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Masuk · LMS POLTEK CWE</title><link rel="stylesheet" href="shared/css/global.css"></head>
-<body class="login-body"><main class="login-layout"><section class="login-brand"><div class="brand-lockup"><span class="brand-symbol">C</span><span><b>LMS POLTEK CWE</b><small>LEARNING MANAGEMENT SYSTEM</small></span></div><div><span class="eyebrow">SELAMAT DATANG KEMBALI</span><h1>Mulai aktivitas<br><em>akademikmu.</em></h1><p>Masuk ke portal sesuai peran untuk melanjutkan kegiatan pembelajaran.</p></div><small class="login-copyright">POLITEKNIK CITRA WIDYA EDUKASI · 2026</small></section>
-<section class="login-form-wrap"><form class="login-form" id="loginForm"><span class="eyebrow">PORTAL PENGGUNA</span><h2>Masuk ke akun</h2><p>Gunakan akun demo untuk menjelajahi prototipe LMS.</p><label>Peran pengguna<select id="role"><option value="mahasiswa">Mahasiswa</option><option value="dosen">Dosen</option><option value="admin">Admin</option></select></label><label>Email / NIM / NIDN<input id="identity" placeholder="contoh: aditya@poltekcwe.ac.id" required></label><label>Password<input id="password" type="password" placeholder="Masukkan password" required></label><button class="primary-btn full" type="submit">Masuk <span>→</span></button><div class="demo-note"><b>Mode demo</b><br>Isi identitas dan password apa saja. Autentikasi server belum diaktifkan.</div><a class="back-link" href="index.html">← Kembali ke halaman utama</a></form></section></main><script src="shared/js/auth.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Masuk · LMS POLTEK CWE</title>
+  <link rel="stylesheet" href="shared/css/global.css">
+  <!-- Library Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body class="login-body">
+  <main class="login-layout">
+    <section class="login-brand">
+      <div class="brand-lockup">
+        <span class="brand-symbol">C</span>
+        <span>
+          <b>LMS POLTEK CWE</b>
+          <small>LEARNING MANAGEMENT SYSTEM</small>
+        </span>
+      </div>
+      <div>
+        <span class="eyebrow">SELAMAT DATANG KEMBALI</span>
+        <h1>Mulai aktivitas<br><em>akademikmu.</em></h1>
+        <p>Masuk ke portal sesuai peran untuk melanjutkan kegiatan pembelajaran.</p>
+      </div>
+      <small class="login-copyright">POLITEKNIK CITRA WIDYA EDUKASI · 2026</small>
+    </section>
+
+    <section class="login-form-wrap">
+      <form class="login-form" id="loginForm">
+        <span class="eyebrow">PORTAL PENGGUNA</span>
+        <h2>Masuk ke akun</h2>
+        <p>Gunakan akun terdaftar atau masuk cepat dengan akun Google pribadi.</p>
+
+        <label>
+          Peran pengguna
+          <select id="role">
+            <option value="mahasiswa">Mahasiswa</option>
+            <option value="dosen">Dosen</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label>
+
+        <label>
+          Email / NIM / NIDN
+          <input id="identity" placeholder="contoh: aditya@poltekcwe.ac.id" required>
+        </label>
+
+        <label>
+          Password
+          <input id="password" type="password" placeholder="Masukkan password" required>
+        </label>
+
+        <button class="primary-btn full" type="submit">Masuk <span>→</span></button>
+
+        <!-- Pemisah & Tombol Login Google -->
+        <div style="display:flex; align-items:center; gap:10px; margin:16px 0 12px; opacity:0.6; font-size:12px;">
+          <hr style="flex:1; border:none; border-top:1px solid currentColor;">
+          <span>ATAU</span>
+          <hr style="flex:1; border:none; border-top:1px solid currentColor;">
+        </div>
+
+        <div style="display:flex; justify-content:center; margin-bottom:14px;">
+          <div id="g_id_onload"
+               data-client_id="1047565775377-80ir3b1bb1n8r7th3ch8ht9j1nuv1di7.apps.googleusercontent.com"
+               data-callback="handleGoogleLogin"
+               data-auto_prompt="false">
+          </div>
+          <div class="g_id_signin"
+               data-type="standard"
+               data-size="large"
+               data-theme="outline"
+               data-text="sign_in_with"
+               data-shape="rectangular"
+               data-logo_alignment="left">
+          </div>
+        </div>
+
+        <div class="demo-note" id="loginStatusNote">
+          <b>Info Autentikasi</b><br>
+          Pilih peran di atas sebelum klik tombol Google jika baru pertama kali mendaftar.
+        </div>
+
+        <a class="back-link" href="index.html">← Kembali ke halaman utama</a>
+      </form>
+    </section>
+  </main>
+
+  <script src="shared/js/auth.js"></script>
+  <script>
+    // Ubah API_BASE_URL ke URL Cloudflare Tunnel Anda saat diakses dari Vercel,
+    // atau gunakan 'http://localhost:8080' saat dijalankan di laptop lokal.
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:8080'
+      : 'https://temperatures-variation-perhaps-could.trycloudflare.com';
+
+    async function handleGoogleLogin(response) {
+      const idToken = response.credential;
+      const selectedRole = document.getElementById('role').value;
+      const statusNote = document.getElementById('loginStatusNote');
+
+      statusNote.innerHTML = '<b>Memverifikasi akun Google...</b><br>Mohon tunggu sebentar.';
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/auth/google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            token: idToken,
+            role: selectedRole
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          // Simpan sesi user ke localStorage (menyesuaikan format umum auth.js)
+          const userSession = {
+            ...data,
+            role: (data.role || selectedRole).toLowerCase()
+          };
+          localStorage.setItem('lms_user', JSON.stringify(userSession));
+          localStorage.setItem('user', JSON.stringify(userSession));
+
+          // Arahkan sesuai peran
+          const roleTarget = userSession.role;
+          if (roleTarget === 'dosen') {
+            window.location.href = 'dosen/dashboard.html';
+          } else if (roleTarget === 'admin') {
+            window.location.href = 'admin/dashboard.html';
+          } else {
+            window.location.href = 'mahasiswa/dashboard.html';
+          }
+        } else {
+          statusNote.innerHTML = `<b>Login Gagal</b><br>${data.message || 'Akun Google tidak dapat diverifikasi.'}`;
+        }
+      } catch (err) {
+        console.error('Google Login Error:', err);
+        statusNote.innerHTML = '<b>Koneksi Terputus</b><br>Pastikan server Spring Boot (dan Cloudflare Tunnel) sedang aktif.';
+      }
+    }
+  </script>
+</body>
+</html>
