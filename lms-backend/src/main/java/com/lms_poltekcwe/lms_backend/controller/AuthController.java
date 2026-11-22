@@ -1,47 +1,54 @@
-package com.lms_poltekcwe.lms_backend.controller;
+@PostMapping("/google")
+public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> payload) {
+    String idTokenString = payload.get("token");
+    String clientId = "1047565775377-80ir3b1bb1n8r7th3ch8ht9j1nuv1di7.apps.googleusercontent.com";
 
-import com.lms_poltekcwe.lms_backend.entity.User;
-import com.lms_poltekcwe.lms_backend.repository.UserRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.Map;
-import java.util.Optional;
+    try {
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                new NetHttpTransport(), new GsonFactory())
+                .setAudience(Collections.singletonList(clientId))
+                .build();
 
-@RestController
-@RequestMapping("/api/auth")
-public class AuthController {
-    private final UserRepository userRepository;
-
-    public AuthController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> payload) {
-        String username = payload.get("username");
-        String password = payload.get("password");
-
-        if (username == null || password == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Username/NIM dan password wajib diisi"));
+        GoogleIdToken idToken = verifier.verify(idTokenString);
+        if (idToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Token Google tidak valid."));
         }
 
-        Optional<User> userOpt = userRepository.findByUsernameOrNimNidn(username.trim());
-        if (userOpt.isEmpty() || !userOpt.get().getPasswordHash().equals(password)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Username/NIM atau password salah"));
+        GoogleIdToken.Payload googlePayload = idToken.getPayload();
+        String email = googlePayload.getEmail().toLowerCase().trim();
+        String name = (String) googlePayload.get("name");
+
+        // 1. Cek domain email dan tentukan role secara otomatis
+        String detectedRole;
+        if (email.endsWith("@mhs.cwe.ac.id")) {
+            detectedRole = "mahasiswa";
+        } else if (email.endsWith("@dosen.cwe.ac.id") || email.endsWith("@cwe.ac.id")) {
+            // Sesuaikan "@dosen.cwe.ac.id" atau "@cwe.ac.id" dengan domain email dosen POLTEK CWE
+            detectedRole = "dosen";
+        } else {
+            // Tolak jika bukan email kampus
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "Akses ditolak! Gunakan email institusi (@mhs.cwe.ac.id atau @dosen.cwe.ac.id)."));
         }
 
-        User user = userOpt.get();
-        if (Boolean.FALSE.equals(user.getIsActive())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Akun dinonaktifkan"));
-        }
+        // 2. Cek ke database MariaDB; jika belum ada, otomatis buatkan akun sesuai role
+        final String finalRole = detectedRole;
+        User user = userRepository.findByEmail(email).orElseGet(() -> {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setUsername(email.split("@")[0]);
+            newUser.setNamaLengkap(name); // sesuaikan dengan setter nama di Entity User Anda
+            newUser.setRole(finalRole);
+            return userRepository.save(newUser);
+        });
 
-        return ResponseEntity.ok(Map.of(
-            "id", user.getId(),
-            "username", user.getUsernameOrNimNidn(),
-            "namaLengkap", user.getNamaLengkap(),
-            "email", user.getEmail(),
-            "role", user.getRole()
-        ));
+        // Pastikan role pada response sesuai domain email
+        user.setRole(finalRole);
+        return ResponseEntity.ok(user);
+
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("message", "Terjadi kesalahan server: " + e.getMessage()));
     }
 }
