@@ -1,1 +1,1 @@
-// Entry point role dosen; UI dirender oleh shared/js/app.js.
+// Entry point role menggunakan shared/js/app.js

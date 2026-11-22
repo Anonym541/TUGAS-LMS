@@ -1,1 +1,1 @@
-// Entry point role mahasiswa; UI dirender oleh shared/js/app.js.
+// Entry point role menggunakan shared/js/app.js

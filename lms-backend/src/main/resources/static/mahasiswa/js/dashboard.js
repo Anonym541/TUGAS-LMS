@@ -1,1 +1,1 @@
-// Modul JavaScript halaman dashboard untuk mahasiswa; logika utama ada di shared/js/app.js.
+// Modul halaman Dashboard; renderer utama berada di shared/js/app.js.
