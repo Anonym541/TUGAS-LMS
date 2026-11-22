@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Masuk · LMS POLTEK CWE</title>
   <link rel="stylesheet" href="shared/css/global.css">
-  <!-- Library Google Identity Services -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="login-body">
@@ -30,10 +29,20 @@
       <form class="login-form" id="loginForm">
         <span class="eyebrow">PORTAL PENGGUNA</span>
         <h2>Masuk ke akun</h2>
-        <p>Gunakan akun terdaftar atau masuk cepat dengan akun Google pribadi.</p>
+        <p>Gunakan akun terdaftar atau akun Google institusi POLTEK CWE.</p>
+
+        <label>
+          Peran pengguna
+          <select id="role">
+            <option value="mahasiswa">Mahasiswa</option>
+            <option value="dosen">Dosen</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label>
+
         <label>
           Email / NIM / NIDN
-          <input id="identity" placeholder="contoh: example@poltekcwe.ac.id" required>
+          <input id="identity" placeholder="contoh: 202415012@mhs.cwe.ac.id" required>
         </label>
 
         <label>
@@ -43,10 +52,9 @@
 
         <button class="primary-btn full" type="submit">Masuk <span>→</span></button>
 
-        <!-- Pemisah & Tombol Login Google -->
         <div style="display:flex; align-items:center; gap:10px; margin:16px 0 12px; opacity:0.6; font-size:12px;">
           <hr style="flex:1; border:none; border-top:1px solid currentColor;">
-          <span>ATAU</span>
+          <span>ATAU MASUK DENGAN AKUN KAMPUS</span>
           <hr style="flex:1; border:none; border-top:1px solid currentColor;">
         </div>
 
@@ -67,8 +75,8 @@
         </div>
 
         <div class="demo-note" id="loginStatusNote">
-          <b>Info Autentikasi</b><br>
-          Pilih peran di atas sebelum klik tombol Google jika baru pertama kali mendaftar.
+          <b>Ketentuan Login Google</b><br>
+          Wajib menggunakan email <code>@mhs.cwe.ac.id</code> (Mahasiswa) atau <code>@dosen.cwe.ac.id</code> (Dosen).
         </div>
 
         <a class="back-link" href="index.html">← Kembali ke halaman utama</a>
@@ -78,55 +86,49 @@
 
   <script src="shared/js/auth.js"></script>
   <script>
-    // Ubah API_BASE_URL ke URL Cloudflare Tunnel Anda saat diakses dari Vercel,
-    // atau gunakan 'http://localhost:8080' saat dijalankan di laptop lokal.
     const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:8080'
       : 'https://temperatures-variation-perhaps-could.trycloudflare.com';
 
     async function handleGoogleLogin(response) {
       const idToken = response.credential;
-      const selectedRole = document.getElementById('role').value;
       const statusNote = document.getElementById('loginStatusNote');
 
-      statusNote.innerHTML = '<b>Memverifikasi akun Google...</b><br>Mohon tunggu sebentar.';
+      statusNote.style.borderColor = '';
+      statusNote.innerHTML = '<b>Memverifikasi domain email kampus...</b><br>Mohon tunggu sebentar.';
 
       try {
         const res = await fetch(`${API_BASE_URL}/api/auth/google`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            token: idToken,
-            role: selectedRole
-          })
+          body: JSON.stringify({ token: idToken })
         });
 
         const data = await res.json();
 
         if (res.ok) {
-          // Simpan sesi user ke localStorage (menyesuaikan format umum auth.js)
+          const detectedRole = data.role.toLowerCase();
           const userSession = {
             ...data,
-            role: (data.role || selectedRole).toLowerCase()
+            role: detectedRole
           };
+
           localStorage.setItem('lms_user', JSON.stringify(userSession));
           localStorage.setItem('user', JSON.stringify(userSession));
 
-          // Arahkan sesuai peran
-          const roleTarget = userSession.role;
-          if (roleTarget === 'dosen') {
+          if (detectedRole === 'dosen') {
             window.location.href = 'dosen/dashboard.html';
-          } else if (roleTarget === 'admin') {
-            window.location.href = 'admin/dashboard.html';
           } else {
             window.location.href = 'mahasiswa/dashboard.html';
           }
         } else {
-          statusNote.innerHTML = `<b>Login Gagal</b><br>${data.message || 'Akun Google tidak dapat diverifikasi.'}`;
+          // Tampilkan pesan penolakan jika bukan @mhs.cwe.ac.id atau @dosen.cwe.ac.id
+          statusNote.style.borderColor = '#e11d48';
+          statusNote.innerHTML = `<b style="color:#e11d48;">Login Ditolak</b><br>${data.message || 'Email tidak terdaftar sebagai civitas POLTEK CWE.'}`;
         }
       } catch (err) {
         console.error('Google Login Error:', err);
-        statusNote.innerHTML = '<b>Koneksi Terputus</b><br>Pastikan server Spring Boot (dan Cloudflare Tunnel) sedang aktif.';
+        statusNote.innerHTML = '<b>Koneksi Gagal</b><br>Tidak dapat terhubung ke server backend.';
       }
     }
   </script>
