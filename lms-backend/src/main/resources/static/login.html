@@ -84,12 +84,8 @@
     </section>
   </main>
 
-  <script src="shared/js/auth.js"></script>
+<script src="shared/js/auth.js"></script>
   <script>
-    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:8080'
-      : 'https://temperatures-variation-perhaps-could.trycloudflare.com';
-
     async function handleGoogleLogin(response) {
       const idToken = response.credential;
       const statusNote = document.getElementById('loginStatusNote');
@@ -108,21 +104,18 @@
 
         if (res.ok) {
           const detectedRole = data.role.toLowerCase();
-          const userSession = {
-            ...data,
-            role: detectedRole
-          };
+          localStorage.setItem('lms_role', detectedRole);
+          localStorage.setItem('lms_user', data.namaLengkap || data.email);
+          localStorage.setItem('user', JSON.stringify({ ...data, role: detectedRole }));
 
-          localStorage.setItem('lms_user', JSON.stringify(userSession));
-          localStorage.setItem('user', JSON.stringify(userSession));
+          const target = detectedRole === 'admin'
+            ? 'admin/html/a-dashboard.html'
+            : detectedRole === 'dosen'
+              ? 'dosen/html/a-dashboard.html'
+              : 'mahasiswa/html/a-dashboard.html';
 
-          if (detectedRole === 'dosen') {
-            window.location.href = 'dosen/dashboard.html';
-          } else {
-            window.location.href = 'mahasiswa/dashboard.html';
-          }
+          window.location.href = target;
         } else {
-          // Tampilkan pesan penolakan jika bukan @mhs.cwe.ac.id atau @dosen.cwe.ac.id
           statusNote.style.borderColor = '#e11d48';
           statusNote.innerHTML = `<b style="color:#e11d48;">Login Ditolak</b><br>${data.message || 'Email tidak terdaftar sebagai civitas POLTEK CWE.'}`;
         }
