@@ -1,6 +1,6 @@
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:8080'
-  : 'TEMPEL_URL_PORT_8080_CODESPACES_KAMU_DI_SINI'; // contoh: https://special-fi...-8080.app.github.dev (tanpa / di akhir)
+  : 'https://special-fiesta-7v5grpjv7rpx3pp54-8080.app.github.dev'; // contoh: https://special-fi...-8080.app.github.dev (tanpa / di akhir)
 
 document.getElementById('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
